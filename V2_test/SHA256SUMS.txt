@@ -1,0 +1,12 @@
+524e0bc386d1fe086ce2294ca9c9f2a58888be53ab2bf68832de0aae672a29b5  ./.openai/hosting.json
+43df0891db85c024d0983a7bd6bccff53b99158e81420609736f3aeaa66c746b  ./BASELINE_COMMIT.txt
+da8c5c7399185829105867f62d553137b1d98895ef4518c8116bfaf8af560f61  ./DEPLOYMENT_INFO.md
+6585effae941e4fa2951118f70f442ac31a6b1c10e4a1fb31eb5a4c7ea1078af  ./README.md
+f5d4eccaa745425a1a30face5ea3c00d8545915f7ca3b0625e0e33df1b7dcc6c  ./dist/app.js
+0f78c43f5d28d18ad08090ddeb9ea147690390e1e2de5ace6c59b4580d42ae50  ./dist/assets/caramel-chair.png
+51baf6c254f089b4b2dd1f8c6af7f169167a7302d40ec629e8a1629a5a37b34a  ./dist/assets/living-room.png
+1ba32fc2aa6b6027f919ab05e3b6d4123bd1bcd23f8dba726f7401b3b1961e87  ./dist/index.html
+e8e161a190298ab6ce3927c7b60fa453399410c64f9d6a7180f01ffc0368e99f  ./dist/server/index.js
+c054c0e7d9807412f5374a684ae8790fbe5696272ed2abc388f2959b20fc5cfd  ./scripts/build-worker.mjs
+04a4b15125e81a3ba355de604c8fbfacce2821b8427e6631719e79aa88f974f2  ./scripts/validate-worker.mjs
+bb32d6685eb3d618427c59073bfe444e401ad32dce723e9565af0e58d82330ed  ./worker/index.js
