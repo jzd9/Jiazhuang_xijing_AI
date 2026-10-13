@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>栖境 AI 家居空间预览 · 使用说明</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:900px; background:#0c1410; font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; color:#e9f2ed; -webkit-font-smoothing:antialiased; }
+  .banner { background:linear-gradient(140deg,#0b2e1f 0%,#0f5c3c 55%,#0a2418 100%); padding:46px 36px 30px; border-bottom:1px solid #1d3a2b; }
+  .tag { display:inline-block; border:1px solid rgba(62,207,142,.45); color:#3ecf8e; font-size:12px; letter-spacing:2px; padding:4px 12px; border-radius:999px; margin-bottom:14px; }
+  .banner h1 { font-size:33px; font-weight:700; letter-spacing:1px; color:#ffffff; }
+  .banner .sub { font-size:15px; margin-top:10px; color:rgba(233,242,237,.88); line-height:1.6; }
+  .chips { margin-top:15px; display:flex; gap:10px; }
+  .chip { border:1px solid rgba(233,242,237,.35); border-radius:999px; padding:6px 14px; font-size:13px; color:#e9f2ed; }
+  .aud { margin-top:12px; font-size:13px; color:rgba(233,242,237,.65); }
+  .wrap { padding:4px 36px 44px; }
+  .sec { margin-top:28px; }
+  .sec-h { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .sec-h .no { width:30px; height:30px; border-radius:9px; background:#3ecf8e; color:#06231a; font-size:15px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .sec-h h2 { font-size:21px; font-weight:700; color:#ffffff; }
+  .sec-h .en { margin-left:auto; font-size:11px; letter-spacing:1.5px; color:#4f6a5c; }
+  .card { background:#13201a; border:1px solid #24382e; border-radius:14px; padding:18px; }
+  .shotwrap { background:#ffffff; padding:8px; border-radius:12px; }
+  img.shot { width:100%; display:block; border-radius:8px; }
+  .cap { margin-top:9px; font-size:12px; color:#8fa89b; line-height:1.5; }
+  .legend { display:flex; gap:10px; margin-top:12px; }
+  .legend .lg { flex:1; text-align:center; border:1px solid rgba(62,207,142,.4); color:#3ecf8e; background:rgba(62,207,142,.08); border-radius:8px; padding:7px 4px; font-size:13px; }
+  .ic { width:26px; height:26px; color:#3ecf8e; margin-bottom:10px; }
+  .prep { display:flex; gap:14px; }
+  .prep .card { flex:1; padding:18px 16px; }
+  .prep .t { font-size:15px; font-weight:700; color:#ffffff; }
+  .prep .d { margin-top:7px; font-size:13px; color:#9db4a8; line-height:1.6; }
+  .tip { margin-top:14px; background:rgba(232,176,75,.10); border:1px solid rgba(232,176,75,.38); border-radius:10px; padding:12px 14px; font-size:13px; color:#f0c674; line-height:1.55; display:flex; gap:10px; align-items:flex-start; }
+  .tip .ic { width:18px; height:18px; color:#f0c674; margin:2px 0 0; flex-shrink:0; }
+  .step { background:#13201a; border:1px solid #24382e; border-radius:14px; padding:18px; }
+  .step .head { display:flex; align-items:center; gap:12px; }
+  .step .num { width:34px; height:34px; border-radius:50%; background:#3ecf8e; color:#06231a; font-size:18px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .step h3 { font-size:17px; font-weight:700; color:#ffffff; }
+  .step .how { margin:11px 0 13px; font-size:14px; color:#c4d6cc; line-height:1.7; }
+  .done { margin-top:12px; font-size:13px; color:#3ecf8e; background:rgba(62,207,142,.09); border:1px solid rgba(62,207,142,.28); border-radius:8px; padding:9px 12px; line-height:1.55; }
+  .warn-line { margin-top:8px; font-size:12px; color:#71837a; line-height:1.5; }
+  .arr { height:30px; display:flex; align-items:center; justify-content:center; }
+  .duo { display:flex; gap:12px; align-items:flex-start; }
+  .duo .a { flex:62; }
+  .duo .b { flex:38; }
+  .stagestrip { display:flex; align-items:stretch; gap:0; margin:4px 0 14px; }
+  .stage { flex:1; background:rgba(62,207,142,.08); border:1px solid rgba(62,207,142,.32); border-radius:10px; padding:9px 6px; text-align:center; }
+  .stage .sn { font-size:11px; color:#3ecf8e; font-weight:800; letter-spacing:1px; }
+  .stage .st { margin-top:4px; font-size:12px; color:#dcebe3; line-height:1.35; }
+  .sarr { width:22px; display:flex; align-items:center; justify-content:center; color:#3ecf8e; flex-shrink:0; }
+  .btnrow { display:flex; gap:12px; }
+  .btn { flex:1; text-align:center; padding:13px 6px; border-radius:10px; font-size:15px; font-weight:700; color:#06231a; }
+  .btndesc { flex:1; text-align:center; font-size:12px; color:#9db4a8; margin-top:9px; line-height:1.6; }
+  .btncols { display:flex; gap:12px; margin-top:2px; }
+  .btncol { flex:1; }
+  .qcline { margin-top:14px; font-size:13px; color:#c4d6cc; background:rgba(255,255,255,.04); border:1px solid #24382e; border-radius:8px; padding:10px 12px; line-height:1.7; }
+  .faq .qa { background:#13201a; border:1px solid #24382e; border-radius:12px; padding:15px 18px; margin-top:12px; }
+  .faq .q { font-size:15px; font-weight:700; color:#3ecf8e; }
+  .faq .q .qm { display:inline-block; background:rgba(62,207,142,.14); color:#3ecf8e; border-radius:6px; font-size:12px; padding:1px 8px; margin-right:8px; font-weight:800; }
+  .faq .a { margin-top:8px; font-size:14px; color:#c4d6cc; line-height:1.7; }
+  .footer { margin-top:30px; padding-top:18px; border-top:1px solid #1d3a2b; text-align:center; }
+  .entry { display:inline-block; border:1px solid rgba(62,207,142,.5); background:rgba(62,207,142,.10); color:#3ecf8e; font-size:14px; font-weight:700; border-radius:999px; padding:10px 26px; letter-spacing:.5px; }
+  .foot-sec { margin-top:16px; font-size:12px; color:#71837a; line-height:1.9; }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <div class="tag">栖境 AI · 使用指南</div>
+  <h1>栖境 AI 家居空间预览</h1>
+  <div class="sub">一张房间照片 + 一张商品图，AI 帮你提前看到家具摆进家里的真实效果</div>
+  <div class="chips">
+    <span class="chip">添加家具 · 在空位放一件新品</span>
+    <span class="chip">替换家具 · 把旧家具换成新品</span>
+  </div>
+  <div class="aud">适用：家具电商运营 · 导购演示 · 想预览搭配效果的普通用户</div>
+</div>
+
+<div class="wrap">
+
+  <div class="sec">
+    <div class="card">
+      <div class="shotwrap"><img class="shot" src="文档配图/图5_全新对话_三栏全页布局.png" alt="三栏全页布局"></div>
+      <div class="legend">
+        <div class="lg">左侧 · 历史对话</div>
+        <div class="lg">中间 · 对话与输入区</div>
+        <div class="lg">右侧 · 素材面板</div>
+      </div>
+      <div class="cap">右侧"本轮素材"面板：上传两张图、选择添加或替换、填写尺寸、查看点选位置，都在这里完成</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="no">1</span><h2>使用前准备</h2><span class="en">GET READY</span></div>
+    <div class="prep">
+      <div class="card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8"/><path d="M12 16v4"/></svg>
+        <div class="t">桌面电脑 + 稳定网络</div>
+        <div class="d">手机端目前只能浏览页面，上传素材请使用桌面电脑</div>
+      </div>
+      <div class="card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/></svg>
+        <div class="t">清晰的空间照片</div>
+        <div class="d">PNG 或 JPG 格式，不超过 10MB；光线正常、构图完整，不要预先裁切</div>
+      </div>
+      <div class="card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>
+        <div class="t">商品参考图</div>
+        <div class="d">主体完整、背景干净即可，无需自己抠图，系统自动处理</div>
+      </div>
+    </div>
+    <div class="tip"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>时间预期：正常生成需几分钟；模型排队时可能 10–20 分钟，期间请不要关闭页面</span></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="no">2</span><h2>核心操作 · 四步生成</h2><span class="en">4 STEPS</span></div>
+
+    <div class="step">
+      <div class="head"><span class="num">1</span><h3>上传两张图，选择"添加"或"替换"</h3></div>
+      <div class="how">点右侧"空间原图""商品参考图"上传两张图；再点"添加到照片"或"替换现有物品"选定操作。知道商品真实尺寸时，可在长/宽/高填入厘米数，比例会更准确。</div>
+      <div class="shotwrap"><img class="shot" src="文档配图/图6_素材面板_上传与点选完成.png" alt="素材面板"></div>
+      <div class="done">完成标志：两张缩略图都显示出来，并出现"商品原图已作为参考图保存"提示</div>
+      <div class="warn-line">注意：在同一段对话里重新上传空间照片，会清空当前消息记录</div>
+    </div>
+    <div class="arr"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3ecf8e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v14"/><path d="M6 12l6 6 6-6"/></svg></div>
+
+    <div class="step">
+      <div class="head"><span class="num">2</span><h3>在照片上点选摆放位置</h3></div>
+      <div class="how">单击照片中想放家具的位置，这个点代表"家具底部中心"——落地家具点在地面上，桌面物品点在桌面上。</div>
+      <div class="duo">
+        <div class="a"><div class="shotwrap"><img class="shot" src="文档配图/图7_本轮输入_落点标记.png" alt="落点标记"></div><div class="cap">点选后，照片上出现橙色落点标记</div></div>
+        <div class="b"><div class="shotwrap"><img class="shot" src="文档配图/图10_坐标卡片_已点选目标位置.png" alt="坐标卡片"></div><div class="cap">右侧同步出现坐标卡片</div></div>
+      </div>
+      <div class="done">完成标志：右侧出现"已点选目标位置 X / Y"坐标卡；想重选直接点其他位置，想清空点上方"清除点选"</div>
+    </div>
+    <div class="arr"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3ecf8e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v14"/><path d="M6 12l6 6 6-6"/></svg></div>
+
+    <div class="step">
+      <div class="head"><span class="num">3</span><h3>输入要求，点"发送并生成"</h3></div>
+      <div class="how">用一句话描述要求（例如"把这把椅子放到窗边"），然后点"发送并生成"。如果弹出"请确认"窗口，说明点选位置和文字描述不一致，按提示二选一即可继续。</div>
+      <div class="shotwrap"><img class="shot" src="文档配图/图9_确认弹窗_点选与文字冲突.png" alt="确认弹窗"></div>
+      <div class="done">完成标志：消息区出现五阶段进度卡，任务正式开始</div>
+    </div>
+    <div class="arr"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3ecf8e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v14"/><path d="M6 12l6 6 6-6"/></svg></div>
+
+    <div class="step">
+      <div class="head"><span class="num">4</span><h3>等待完成，查看效果图</h3></div>
+      <div class="how">等待五个阶段依次完成。期间出现"正在百炼后台处理…"表示云端正在排队处理，不是卡死。</div>
+      <div class="stagestrip">
+        <div class="stage"><div class="sn">STAGE 1</div><div class="st">正在理解需求</div></div>
+        <div class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></div>
+        <div class="stage"><div class="sn">STAGE 2</div><div class="st">正在生成基础效果</div></div>
+        <div class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></div>
+        <div class="stage"><div class="sn">STAGE 3</div><div class="st">正在优化空间与光影</div></div>
+        <div class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></div>
+        <div class="stage"><div class="sn">STAGE 4</div><div class="st">正在检查结果</div></div>
+        <div class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></div>
+        <div class="stage"><div class="sn">STAGE 5</div><div class="st">完成</div></div>
+      </div>
+      <div class="shotwrap"><img class="shot" src="文档配图/图4_对话视图_结果卡与引用.png" alt="结果卡"></div>
+      <div class="done">完成标志：出现"效果图 V1"卡片和 AI 说明消息；QC PASS 表示通过自动质检</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="no">3</span><h2>查看与使用结果</h2><span class="en">USE THE RESULT</span></div>
+    <div class="card">
+      <div class="btnrow">
+        <div class="btn" style="background:#3ecf8e;">引用这张图</div>
+        <div class="btn" style="background:#d7e2dc;">下载</div>
+        <div class="btn" style="background:#e8862e;">重新生成</div>
+      </div>
+      <div class="btncols">
+        <div class="btncol"><div class="btndesc">在这张图基础上继续修改：引用后输入具体要求，如"椅子再小一点，向右移一些"</div></div>
+        <div class="btncol"><div class="btndesc">把效果图保存为"栖境AI-效果图.png"图片文件，随时可发给别人</div></div>
+        <div class="btncol"><div class="btndesc">对整体效果不满意时，用当前素材整体重出一版</div></div>
+      </div>
+      <div class="qcline">质检状态说明：QC PASS＝通过自动质检；QC WARN＝质检仍有提醒，建议人工确认效果；QC 待确认＝图片可用，只是质检服务当时不可用。每次成功后版本号 +1（V1、V2、V3……），历史结果都可引用和下载。</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="no">4</span><h2>常见问题</h2><span class="en">FAQ</span></div>
+    <div class="faq">
+      <div class="qa">
+        <div class="q"><span class="qm">问</span>生成失败怎么办？</div>
+        <div class="a">点失败消息卡下方的红色"重新生成"，系统会沿用原素材和指令从头再来。</div>
+        <div class="shotwrap" style="margin-top:12px;"><img class="shot" src="文档配图/失败消息卡_重新生成按钮.png" alt="失败消息卡"></div>
+        <div class="cap">若错误提示中含 Access denied / overdue-payment，是模型账户欠费，请联系管理员处理后再重试</div>
+      </div>
+      <div class="qa">
+        <div class="q"><span class="qm">问</span>等太久是坏了吗？</div>
+        <div class="a">出现"正在百炼后台处理…"说明云端正在排队或处理，不是卡死。生成期间请勿关闭或刷新页面，否则任务不会继续。</div>
+      </div>
+      <div class="qa">
+        <div class="q"><span class="qm">问</span>图片效果不符合要求？</div>
+        <div class="a">点"引用这张图"，再用具体文字说明改动（大小、位置、角度），比笼统地"重新生成"更容易得到想要的效果；也可以填写真实尺寸后再生成。</div>
+      </div>
+      <div class="qa">
+        <div class="q"><span class="qm">问</span>历史记录保存在哪里？</div>
+        <div class="a">只保存在当前使用的浏览器里（约 12 段对话），换设备或清除浏览器数据会丢失；重要图片请及时下载保存。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="entry">打开 https://qijing-ai-home-preview.mawellhihi.chatgpt.site 开始使用</div>
+    <div class="foot-sec">
+      隐私提示：照片会上传云端模型服务处理，请勿上传含人脸、证件、门牌等敏感内容的照片<br>
+      依据 V2 版本真实功能整理 · 2026-10
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
