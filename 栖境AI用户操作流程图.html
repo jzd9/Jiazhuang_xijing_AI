@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>栖境 AI 用户使用流程图（泳道图）</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1600px; background:#ffffff; font-family:"PingFang SC","Hiragino Sans GB",sans-serif; color:#222; -webkit-font-smoothing:antialiased; }
+  .page { padding:24px 26px 20px; }
+  .band { display:flex; align-items:baseline; gap:16px; margin-bottom:14px; }
+  .band h1 { font-size:24px; font-weight:800; color:#16241e; }
+  .band .cap { margin-left:auto; font-size:12px; color:#6b7a72; }
+  .grid { display:grid;
+    grid-template-columns:132px 195px 30px 195px 30px 215px 30px 215px 30px 205px 30px 225px;
+    grid-template-rows:44px auto auto auto auto auto auto auto auto; }
+  .cell { padding:4px; min-width:0; }
+  .ph { display:flex; align-items:center; justify-content:center; background:#f0f2f4; border:1.4px solid #d5dbd8; border-radius:8px; font-size:14px; font-weight:800; color:#33413a; margin:2px 4px; }
+  .lane { display:flex; flex-direction:column; gap:4px; align-items:center; justify-content:center; border-radius:9px; color:#fff; font-weight:800; margin:2px 4px; padding:8px 6px; text-align:center; }
+  .lane .l1n { font-size:15px; }
+  .lane .l2n { font-size:11px; font-weight:600; opacity:.92; }
+  .ar { display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800; color:#333; padding-top:6px; }
+  .ar .t { display:block; font-size:10.5px; font-weight:700; color:#6b7a72; text-align:center; line-height:1.35; margin-top:4px; }
+  .v { display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .nd { border-radius:9px; border:1.6px solid; padding:9px 11px; font-size:11.5px; line-height:1.6; min-width:0; }
+  .nt { font-size:13px; font-weight:800; margin-bottom:3px; }
+  .nd b { font-weight:800; }
+  .c-user { background:#E3F2FD; border-color:#1976D2; color:#11406E; } .c-user .nt { color:#0D47A1; }
+  .c-fe   { background:#E0F2F1; border-color:#00897B; color:#124B45; } .c-fe .nt { color:#046B5F; }
+  .c-wk   { background:#FFF3E0; border-color:#F57C00; color:#7A4A08; } .c-wk .nt { color:#A85B00; }
+  .c-bl   { background:#F3E5F5; border-color:#7B1FA2; color:#54205F; } .c-bl .nt { color:#5B2C6F; }
+  .c-err  { background:#FFEBEE; border-color:#D32F2F; color:#8F1F1F; } .c-err .nt { color:#B71C1C; }
+  .stack { display:flex; flex-direction:column; gap:7px; }
+  .pill { align-self:center; background:#2E7D32; color:#fff; border-radius:20px; padding:3px 14px; font-size:12px; font-weight:800; text-align:center; white-space:nowrap; }
+  .dia { width:88px; height:88px; margin:0 auto 2px; }
+  .dia .dbox { width:64px; height:64px; margin:12px; transform:rotate(45deg); background:#E8F5E9; border:1.8px solid #388E3C; border-radius:8px; display:flex; align-items:center; justify-content:center; }
+  .dia .dtxt { transform:rotate(-45deg); font-size:12px; font-weight:800; color:#2E7D32; text-align:center; line-height:1.2; white-space:nowrap; }
+  .dlabel { text-align:center; font-size:10.5px; font-weight:700; color:#2E7D32; margin:3px 0 2px; line-height:1.5; }
+  .minir { border:1.6px dashed #D32F2F; border-radius:7px; background:#fff; padding:5px 9px; font-size:10.5px; font-weight:700; color:#9B1C1C; line-height:1.5; }
+  .branch { border-radius:7px; padding:6px 10px; font-size:10.5px; font-weight:800; line-height:1.55; border:1.4px solid; }
+  .br-g { background:#EAF6EF; border-color:#8CC9A4; color:#155C37; }
+  .br-a { background:#FDF4E5; border-color:#EBCF92; color:#7D5410; }
+  .br-r { background:#FDECEC; border-color:#EDA6A6; color:#9C2B2B; }
+  .qcsplit { display:flex; flex-direction:column; gap:6px; }
+  .lg { display:flex; align-items:center; gap:9px; padding:9px 14px; background:#fbfcfb; border:1.4px solid #e4e9e5; border-radius:9px; font-size:11.5px; font-weight:700; color:#3d4a43; flex-wrap:wrap; }
+  .sw { width:16px; height:12px; border-radius:3px; border:1.4px solid; display:inline-block; margin-right:2px; vertical-align:-1px; }
+  .dsw { width:12px; height:12px; border:1.6px solid #388E3C; background:#E8F5E9; transform:rotate(45deg); border-radius:3px; display:inline-block; }
+  .foot { margin-top:12px; text-align:center; font-size:11px; color:#8a958e; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="band">
+    <h1>栖境 AI 家居空间预览｜用户使用流程图</h1>
+    <div class="cap">泳道：用户 · 前端 · 服务端 · 百炼 ｜ 依据 V2 版本真实功能整理</div>
+  </div>
+
+  <div class="grid">
+
+    <div class="cell" style="grid-row:1;grid-column:2;"><div class="ph">① 准备素材</div></div>
+    <div class="cell" style="grid-row:1;grid-column:4;"><div class="ph">② 提交生成</div></div>
+    <div class="cell" style="grid-row:1;grid-column:6;"><div class="ph">③ 四轮生成</div></div>
+    <div class="cell" style="grid-row:1;grid-column:8;"><div class="ph">④ 质检 QC</div></div>
+    <div class="cell" style="grid-row:1;grid-column:10;"><div class="ph">⑤ 展示结果</div></div>
+    <div class="cell" style="grid-row:1;grid-column:12;"><div class="ph">⑥ 结果操作</div></div>
+
+    <div class="cell" style="grid-row:2;grid-column:1;"><div class="lane" style="background:#1976D2;"><span class="l1n">用户</span><span class="l2n">业务 / 运营</span></div></div>
+    <div class="cell" style="grid-row:2;grid-column:2;"><div class="stack">
+      <div class="pill">● 开始：打开网页</div>
+      <div class="nd c-user"><div class="nt">上传素材（必填）</div>空间原图（PNG/JPG ≤10MB）· 商品参考图（<b>无需抠图</b>）· 选<b>添加 / 替换</b> · 照片上<b>点选落点</b>（家具底部中心）<br>建议填：尺寸（厘米）+ 一句话要求</div>
+    </div></div>
+    <div class="cell ar" style="grid-row:2;grid-column:3;">→</div>
+    <div class="cell" style="grid-row:2;grid-column:4;"><div class="stack">
+      <div class="dia"><div class="dbox"><div class="dtxt">矛盾？</div></div></div>
+      <div class="dlabel">点选位置与文字描述矛盾？<br>是 → 弹"请确认"二选一：<br>以点选位置为准 / 以文字描述为准<br>否 → 直接继续</div>
+      <div class="nd c-user"><div class="nt">点击"发送并生成"</div>必填齐备后按钮点亮</div>
+    </div></div>
+    <div class="cell" style="grid-row:2;grid-column:10;"><div class="nd c-user"><div class="nt">看到效果图</div>结果卡：效果图 + 版本号 <b>V1 / V2 / V3</b><br>+ QC 标注（PASS / 待确认 / WARN）</div></div>
+    <div class="cell ar" style="grid-row:2;grid-column:11;">→</div>
+    <div class="cell" style="grid-row:2;grid-column:12;"><div class="stack" style="gap:6px;">
+      <div class="minir">↺ 引用这张图：带图回①修改，生成下一版（V2、V3…）</div>
+      <div class="minir">↓ 下载：保存"栖境AI-效果图.png"</div>
+      <div class="minir">↺ 重新生成：整体重出一版<br>（新任务从 R0，非自动循环）→ 回②</div>
+      <div class="pill">● 结束：保存完成 / 继续修改</div>
+    </div></div>
+
+    <div class="cell ar v" style="grid-row:3;grid-column:2;"><span>↓</span><span class="t">素材与落点数据</span></div>
+    <div class="cell ar v" style="grid-row:3;grid-column:4;"><span>↓</span><span class="t">发送指令</span></div>
+    <div class="cell ar v" style="grid-row:3;grid-column:10;"><span>↑</span><span class="t">结果图与 QC 标注</span></div>
+    <div class="cell ar v" style="grid-row:3;grid-column:12;"><span>↑</span><span class="t">下载 / 历史引用</span></div>
+
+    <div class="cell" style="grid-row:4;grid-column:1;"><div class="lane" style="background:#00897B;"><span class="l1n">栖境AI 前端</span><span class="l2n">dist/app.js</span></div></div>
+    <div class="cell" style="grid-row:4;grid-column:2;"><div class="nd c-fe"><div class="nt">素材与坐标处理</div>文件校验（≤10MB）· 落点坐标<b>归一化 X/Y 百分比</b><br>· 冲突弹窗触发</div></div>
+    <div class="cell ar" style="grid-row:4;grid-column:3;">→</div>
+    <div class="cell" style="grid-row:4;grid-column:4;"><div class="nd c-fe"><div class="nt">任务快照 + 发起请求</div>冻结素材 / 坐标 / 操作类型 / Prompt 版本 · 调 <b>/api/generate-stage</b>（浏览器不带 Key）</div></div>
+    <div class="cell" style="grid-row:4;grid-column:10;"><div class="stack">
+      <div class="nd c-fe"><div class="nt">进度与结果卡展示</div>五阶段进度：理解需求 → 生成基础效果 → 优化空间与光影 → 检查结果 → 完成<br>排队提示"正在百炼后台处理…"<br>记录存 localStorage（约 12 段）</div>
+      <div class="nd c-err"><div class="nt">失败卡（异常）</div>Failed to fetch（网络）/ 百炼 400·500（如欠费）/ 轮询超时 150 次上限<br>→ 引导用户点红色"重新生成"</div>
+    </div></div>
+    <div class="cell" style="grid-row:4;grid-column:12;"><div class="nd c-fe"><div class="nt">下载与历史</div>保存"栖境AI-效果图.png" · 历史结果可回看与引用 · "新对话"清空并归档上一段</div></div>
+
+    <div class="cell ar v" style="grid-row:5;grid-column:4;"><span>↓</span><span class="t">HTTPS 请求</span></div>
+    <div class="cell ar v" style="grid-row:5;grid-column:10;"><span>↑</span><span class="t">任务状态 / 失败原因</span></div>
+
+    <div class="cell" style="grid-row:6;grid-column:1;"><div class="lane" style="background:#F57C00;"><span class="l1n">服务端 Worker</span><span class="l2n">Cloudflare</span></div></div>
+    <div class="cell" style="grid-row:6;grid-column:4;"><div class="nd c-wk"><div class="nt">接收请求</div>统一入口<br>/api/generate-stage</div></div>
+    <div class="cell ar" style="grid-row:6;grid-column:5;">→</div>
+    <div class="cell" style="grid-row:6;grid-column:6;"><div class="nd c-wk"><div class="nt">四轮调度与轮询</div>R0→R1→R2→R3 <b>串行</b>，任一轮失败即任务失败<br>异步提交 + 轮询取图（单轮实测 <b>41–45 秒</b>，上限 150 次）<br><b>API Key 仅存环境变量</b> · 无数据库 / 无队列</div></div>
+
+    <div class="cell ar v" style="grid-row:7;grid-column:6;"><span>⇅</span><span class="t">提交任务 / 轮询取图</span></div>
+    <div class="cell ar v" style="grid-row:7;grid-column:8;"><span>↑</span><span class="t">评分与结果图</span></div>
+
+    <div class="cell" style="grid-row:8;grid-column:1;"><div class="lane" style="background:#7B1FA2;"><span class="l1n">阿里云百炼</span><span class="l2n">AI 服务</span></div></div>
+    <div class="cell" style="grid-row:8;grid-column:6;"><div class="stack" style="gap:6px;">
+      <div class="nd c-bl"><div class="nt">R0 需求解析 · qwen3-vl-plus</div>基础图 + 要求 → <b>JSON</b><br>（空间理解 / 落点评估 / 尺寸比例，不生图）</div>
+      <div class="ar" style="padding:0;">↓</div>
+      <div class="nd c-bl"><div class="nt">R1 基础生成 · qwen-image-3.0</div>提示词 + 分析 JSON + 商品参考图 → <b>图 1</b></div>
+      <div class="ar" style="padding:0;">↓</div>
+      <div class="nd c-bl"><div class="nt">R2 综合修正 · qwen-image-3.0</div>修正要求 + <b>图 1（主编辑）</b><br>+ 基础图（锁背景）→ <b>图 2</b></div>
+    </div></div>
+    <div class="cell ar" style="grid-row:8;grid-column:7;">→</div>
+    <div class="cell" style="grid-row:8;grid-column:8;"><div class="stack" style="gap:7px;">
+      <div class="dia"><div class="dbox"><div class="dtxt">R3 质检</div></div></div>
+      <div class="dlabel">qwen3-vl-plus · 三分支判定</div>
+      <div class="qcsplit">
+        <div class="branch br-g">PASS → 交付最终图（QC PASS）</div>
+        <div class="branch br-a">服务不可用 → 交付图 2<br>（标 QC 待确认）</div>
+        <div class="branch br-r">FAIL → 唯一一次纠错（图 3）<br>→ 复检；仍失败 → 交付纠错图，<br>标 QC WARN</div>
+      </div>
+    </div></div>
+
+    <div class="cell lg" style="grid-row:9;grid-column:1 / -1;">
+      <span><span class="sw" style="background:#E3F2FD;border-color:#1976D2;"></span>用户操作</span>
+      <span><span class="sw" style="background:#E0F2F1;border-color:#00897B;"></span>前端处理</span>
+      <span><span class="sw" style="background:#FFF3E0;border-color:#F57C00;"></span>服务端编排</span>
+      <span><span class="sw" style="background:#F3E5F5;border-color:#7B1FA2;"></span>百炼 AI</span>
+      <span><span class="dsw"></span> 判断节点</span>
+      <span><span class="sw" style="background:#FFEBEE;border-color:#D32F2F;"></span>异常 / 失败</span>
+      <span><b style="color:#333;">→ ↓ ↑</b> 实线 = 主流程 / 跨泳道调用</span>
+      <span><b style="color:#D32F2F;">虚线红框 = 返回与循环</b>（引用回①、重新生成回②，新任务从 R0）</span>
+      <span>移动端支持<b>待确认</b> · 桌面 Chrome / Edge 最佳</span>
+    </div>
+
+  </div>
+
+  <div class="foot">栖境 AI 家居空间预览 · 用户使用流程图（泳道图）· 依据 V2 版本真实功能整理</div>
+
+</div>
+</body>
+</html>
