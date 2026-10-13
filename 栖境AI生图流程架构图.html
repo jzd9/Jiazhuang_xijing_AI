@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>栖境 AI 生图流程架构图</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1440px; background:#ffffff; font-family:"PingFang SC","Hiragino Sans GB",sans-serif; color:#2b332f; -webkit-font-smoothing:antialiased; }
+  .page { padding:24px 28px 20px; }
+  .band { background:#f0f2f4; border:1px solid #dfe3e6; border-radius:12px; padding:16px 20px; display:flex; align-items:baseline; gap:16px; }
+  .band h1 { font-size:25px; font-weight:800; color:#16241e; letter-spacing:.5px; }
+  .band .hl { color:#1f6b43; }
+  .band .cap { margin-left:auto; font-size:12.5px; color:#6b7a72; }
+  .row { display:flex; gap:18px; margin-top:18px; align-items:flex-start; }
+  .main { flex:1; min-width:0; }
+  .sidebar { width:352px; flex-shrink:0; }
+  .timeline { display:flex; align-items:center; justify-content:space-between; background:#fbfcfb; border:1px solid #e4e9e5; border-radius:12px; padding:12px 16px; }
+  .tl-step { display:flex; align-items:center; gap:7px; }
+  .tl-num { width:30px; height:30px; border-radius:50%; background:#2f8560; color:#fff; font-size:15px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .tl-txt { font-size:13.5px; font-weight:700; color:#33413a; white-space:nowrap; }
+  .tl-arr { color:#8fa89b; font-size:14px; font-weight:800; }
+  .layer { position:relative; border:2.4px solid; border-radius:14px; padding:24px 15px 15px; background:#fff; }
+  .layer + .down { text-align:center; color:#222; font-size:17px; line-height:1; padding:6px 0; }
+  .ltag { position:absolute; top:-14px; left:15px; color:#fff; font-size:14px; font-weight:800; padding:4px 14px; border-radius:7px; white-space:nowrap; }
+  .nodes { display:flex; gap:11px; align-items:stretch; }
+  .node { flex:1; background:#fff; border:1.4px solid #d8dee4; border-radius:10px; padding:11px 12px; min-width:0; }
+  .nid { font-size:12px; font-weight:800; letter-spacing:.5px; margin-bottom:4px; }
+  .ntitle { font-size:15px; font-weight:800; color:#16241e; line-height:1.35; }
+  .ndesc { font-size:12.5px; color:#4c5b53; line-height:1.6; margin-top:5px; }
+  .ndesc b { font-weight:800; }
+  .l1 { border-color:#e27d9d; } .l1 .nid { color:#c05c80; } .l1 .ltag { background:#e27d9d; } .l1 .ndesc b { color:#c05c80; }
+  .l2 { border-color:#3aa89b; } .l2 .nid { color:#2b8a7d; } .l2 .ltag { background:#3aa89b; } .l2 .ndesc b { color:#2b8a7d; }
+  .l3 { border-color:#e8963c; } .l3 .nid { color:#c56f14; } .l3 .ltag { background:#e8963c; } .l3 .ndesc b { color:#c56f14; }
+  .l4 { border-color:#8b6fc9; } .l4 .nid { color:#6d4fb0; } .l4 .ltag { background:#8b6fc9; }
+  .l5 { border-color:#5a8fd6; } .l5 .nid { color:#3f74b8; } .l5 .ltag { background:#5a8fd6; } .l5 .ndesc b { color:#3f74b8; }
+  .warnbox { margin-top:9px; display:flex; gap:11px; }
+  .amberbox { flex:1; background:#fdf4e5; border:1.6px solid #eecf92; border-radius:9px; padding:9px 12px; font-size:13px; color:#7d5410; font-weight:800; text-align:center; }
+  .shieldbox { flex:1; background:#eef6f0; border:1.6px solid #a9d4bd; border-radius:9px; padding:9px 12px; font-size:13px; color:#17553b; font-weight:800; text-align:center; }
+  .stages { display:flex; gap:10px; align-items:stretch; }
+  .stage { flex:1; background:#fdfcff; border:1.6px solid #cdbcec; border-radius:10px; padding:10px 11px; min-width:0; }
+  .stage .sh { display:flex; align-items:center; gap:7px; margin-bottom:5px; }
+  .stage .rn { width:26px; height:26px; border-radius:50%; background:#6d4fb0; color:#fff; font-size:12.5px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .stage .st { font-size:14px; font-weight:800; color:#37245f; }
+  .mchip { display:inline-block; font-size:11px; font-weight:800; color:#fff; border-radius:6px; padding:2px 8px; margin-bottom:5px; }
+  .m-vis { background:#2b8a5d; }
+  .m-img { background:#8b6fc9; }
+  .sd { font-size:12px; color:#4c5b53; line-height:1.55; }
+  .sd b { color:#37245f; font-weight:800; }
+  .qcrow { margin-top:12px; display:flex; gap:14px; align-items:center; }
+  .diamond { width:112px; height:112px; flex-shrink:0; }
+  .diamond .dbox { width:82px; height:82px; margin:15px; transform:rotate(45deg); background:#fff; border:2px solid #6d4fb0; border-radius:10px; display:flex; align-items:center; justify-content:center; }
+  .diamond .dtxt { transform:rotate(-45deg); font-size:13px; font-weight:800; color:#4b2f8f; text-align:center; line-height:1.25; }
+  .branches { flex:1; display:flex; flex-direction:column; gap:9px; min-width:0; }
+  .branch { border-radius:10px; padding:10px 14px; font-size:13.5px; font-weight:800; line-height:1.5; display:flex; align-items:center; gap:9px; }
+  .branch .dot { width:11px; height:11px; border-radius:50%; flex-shrink:0; }
+  .br-a { background:#eaf6ef; border:1.6px solid #8cc9a4; color:#155c37; }
+  .br-b { background:#fdf4e5; border:1.6px solid #eecf92; color:#7d5410; }
+  .br-c { background:#fdecec; border:1.6px solid #eda6a6; color:#9c2b2b; }
+  .failrow { margin-top:13px; display:flex; gap:11px; align-items:stretch; }
+  .failcard { border:2px dashed #cc5c5c; background:#fdf7f7; border-radius:11px; padding:10px 13px; font-size:13px; font-weight:800; color:#a83232; line-height:1.55; flex:1.25; }
+  .loopcard { border:2px dashed #9aa39d; background:#f7f8f7; border-radius:11px; padding:10px 13px; font-size:13px; color:#4c5b53; line-height:1.55; flex:1; }
+  .loopcard b { color:#222c27; }
+  .sb-card { background:#fff; border:1.4px solid #dfe3e6; border-radius:13px; padding:15px 16px; }
+  .sb-card + .sb-card { margin-top:14px; }
+  .sb-h { font-size:15.5px; font-weight:800; color:#16241e; display:flex; align-items:center; gap:9px; margin-bottom:11px; }
+  .sb-h .ic { width:19px; height:19px; border-radius:5px; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-size:11.5px; font-weight:800; }
+  .fact { display:flex; gap:9px; margin-bottom:10px; align-items:flex-start; }
+  .fact .fn { width:20px; height:20px; border-radius:50%; background:#d84f4f; color:#fff; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+  .fact .ft { font-size:13px; color:#3d4a43; line-height:1.6; }
+  .fact .ft b { color:#16241e; font-weight:800; }
+  .value { font-size:13.5px; color:#2b3a32; line-height:1.7; background:#fbfcfb; border:1.4px solid #e4e9e5; border-radius:9px; padding:11px 13px; font-weight:700; }
+  .value .vh { color:#6d4fb0; font-weight:800; }
+  .metric { display:flex; align-items:baseline; gap:8px; margin-bottom:9px; }
+  .metric .mv { font-size:16px; font-weight:800; color:#1f6b43; white-space:nowrap; }
+  .metric .mk { font-size:12.5px; color:#5c6b64; line-height:1.4; }
+  .lg-row { display:flex; align-items:center; gap:10px; margin-bottom:9px; font-size:12.5px; color:#3d4a43; font-weight:600; }
+  .lg-sw { width:38px; flex-shrink:0; display:flex; justify-content:center; }
+  .modes { display:flex; gap:11px; margin-top:14px; }
+  .mode { flex:1; border-radius:10px; padding:11px 13px; display:flex; gap:11px; align-items:flex-start; border:1.6px solid; }
+  .mode h4 { font-size:14.5px; font-weight:800; color:#16241e; }
+  .mode p { font-size:12px; color:#3d4a43; line-height:1.5; margin-top:3px; }
+  .mode p b { font-weight:800; }
+  .mode .ex { font-size:11px; color:#6b7a72; margin-top:3px; }
+  .mic { border-radius:6px; color:#fff; font-size:12.5px; font-weight:800; padding:4px 10px; flex-shrink:0; }
+  .mode-add { border-color:#8cc9a4; background:#f4faf6; } .mode-add p b { color:#155c37; }
+  .mode-rep { border-color:#a9c4e8; background:#f4f8fd; } .mode-rep p b { color:#1d4f8f; }
+  .mic-add { background:#2f8560; } .mic-rep { background:#3f74b8; }
+  .pswrap { margin:14px 0 0; }
+  .ps-cap { font-size:12px; font-weight:800; color:#6d4fb0; margin-bottom:6px; }
+  .promptstrip { display:flex; gap:10px; align-items:stretch; }
+  .pchip { flex:1; background:#fff; border:1.6px solid #cdbcec; border-radius:10px; padding:9px 11px; min-width:0; }
+  .pchip .ph { font-size:12.5px; font-weight:800; color:#37245f; margin-bottom:3px; }
+  .pchip .pd { font-size:11.5px; color:#4c5b53; line-height:1.5; }
+  .pfinal { flex:0 0 185px; background:#6d4fb0; color:#fff; border-radius:10px; padding:10px 13px; display:flex; flex-direction:column; justify-content:center; gap:3px; }
+  .pfinal .pf1 { font-size:13.5px; font-weight:800; }
+  .pfinal .pf2 { font-size:11px; opacity:.92; }
+  .qcstd { flex:1.05; background:#fbfaff; border:1.6px solid #cdbcec; border-radius:10px; padding:10px 13px; min-width:0; }
+  .qcstd h5 { font-size:13px; font-weight:800; color:#37245f; margin-bottom:5px; }
+  .qcstd li { font-size:11.5px; color:#4c5b53; line-height:1.65; list-style:none; padding-left:14px; position:relative; }
+  .qcstd li::before { content:"•"; position:absolute; left:2px; color:#6d4fb0; font-weight:800; }
+  .errcard { border:2px dashed #cc5c5c; background:#fdf7f7; border-radius:11px; padding:10px 13px; font-size:11.5px; font-weight:700; color:#a83232; line-height:1.7; flex:1.35; }
+  .fact .fn.fg { background:#2f8560; }
+  .foot { margin-top:16px; text-align:center; font-size:11.5px; color:#8a958e; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="band">
+    <h1>栖境 AI 家居空间预览｜生图流程：<span class="hl">四轮生成 + 视觉质检</span></h1>
+    <div class="cap">页面：index.html + worker · 模型：qwen3-vl-plus / qwen-image-3.0</div>
+  </div>
+
+  <div class="row">
+    <div class="main">
+
+      <div class="timeline">
+        <div class="tl-step"><span class="tl-num">1</span><span class="tl-txt">表达要求</span></div><span class="tl-arr">→</span>
+        <div class="tl-step"><span class="tl-num">2</span><span class="tl-txt">上传双图</span></div><span class="tl-arr">→</span>
+        <div class="tl-step"><span class="tl-num">3</span><span class="tl-txt">选择添加/替换</span></div><span class="tl-arr">→</span>
+        <div class="tl-step"><span class="tl-num">4</span><span class="tl-txt">点选落点</span></div><span class="tl-arr">→</span>
+        <div class="tl-step"><span class="tl-num">5</span><span class="tl-txt">冲突确认</span></div><span class="tl-arr">→</span>
+        <div class="tl-step"><span class="tl-num">6</span><span class="tl-txt">发送生成</span></div><span class="tl-arr">→</span>
+        <div class="tl-step"><span class="tl-num">7</span><span class="tl-txt">四轮生成</span></div><span class="tl-arr">→</span>
+        <div class="tl-step"><span class="tl-num">8</span><span class="tl-txt">质检 QC</span></div><span class="tl-arr">→</span>
+        <div class="tl-step"><span class="tl-num">9</span><span class="tl-txt">交付/引用</span></div>
+      </div>
+
+      <div class="modes">
+        <div class="mode mode-add">
+          <span class="mic mic-add">添加</span>
+          <div>
+            <h4>添加模式</h4>
+            <p>在空间<b>空位</b>放入新商品，原有布局与家具全部保留</p>
+            <p class="ex">示例："把这个边几加在沙发旁边"</p>
+          </div>
+        </div>
+        <div class="mode mode-rep">
+          <span class="mic mic-rep">替换</span>
+          <div>
+            <h4>替换模式</h4>
+            <p>把画面中<b>同类旧家具</b>换成商品，外观跟随商品参考图</p>
+            <p class="ex">示例："把旧沙发换成这一款"</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="down">▼</div>
+      <div class="layer l1">
+        <div class="ltag">用户层</div>
+        <div class="nodes">
+          <div class="node"><div class="nid">U1</div><div class="ntitle">输入素材</div><div class="ndesc">空间原图（<b>PNG/JPG ≤10MB</b>）+ 商品参考图（<b>无需自己抠图</b>）+ 可选长宽高（厘米）+ 一句话要求</div></div>
+          <div class="node"><div class="nid">U2</div><div class="ntitle">点选落点</div><div class="ndesc">照片上点一下，代表<b>家具底部中心</b>：落地家具点地面、桌面物品点桌面；可"清除点选"重选</div></div>
+          <div class="node"><div class="nid">U3</div><div class="ntitle">冲突确认</div><div class="ndesc">点选与文字矛盾时弹"请确认"，二选一：<b>以点选位置为准</b> / <b>以文字描述为准</b></div></div>
+          <div class="node"><div class="nid">U4</div><div class="ntitle">查看结果</div><div class="ndesc">引用这张图（继续修改）/ 下载 / 重新生成；成功后版本号 <b>V1、V2、V3 递增</b>，历史结果均可引用与下载</div></div>
+        </div>
+      </div>
+      <div class="down">▼</div>
+
+      <div class="layer l2">
+        <div class="ltag">前端层 dist/app.js</div>
+        <div class="nodes">
+          <div class="node"><div class="nid">F1</div><div class="ntitle">坐标归一化</div><div class="ndesc">点选位置转为 <b>X / Y 百分比</b>，与提示词一起参与生成</div></div>
+          <div class="node"><div class="nid">F2</div><div class="ntitle">任务快照</div><div class="ndesc">冻结<b>素材、坐标、操作类型与 Prompt 版本</b>，后续轮次与重新生成均沿用快照</div></div>
+          <div class="node"><div class="nid">F3</div><div class="ntitle">进度渲染</div><div class="ndesc">五阶段：<b>理解需求 → 生成基础效果 → 优化空间与光影 → 检查结果 → 完成</b>；排队时提示"正在百炼后台处理…"</div></div>
+        </div>
+      </div>
+      <div class="down">▼</div>
+
+      <div class="layer l3">
+        <div class="ltag">服务端编排层 Cloudflare Worker</div>
+        <div class="nodes">
+          <div class="node"><div class="nid">B1</div><div class="ntitle">统一入口 /api/generate-stage</div><div class="ndesc">前端唯一接口，<b>浏览器请求不带 Key</b>；返回仅含结果数据与 request_id</div></div>
+          <div class="node"><div class="nid">B2</div><div class="ntitle">四轮调度与轮询</div><div class="ndesc">R0→R1→R2→R3 <b>串行执行</b>，任一轮失败即任务失败；生图异步提交后<b>轮询取图</b>，单轮实测约 41–45 秒</div></div>
+        </div>
+        <div class="warnbox">
+          <div class="amberbox">无服务端数据库 · 无后台队列</div>
+          <div class="shieldbox">API Key 仅存服务端环境变量</div>
+        </div>
+      </div>
+
+      <div class="pswrap">
+        <div class="ps-cap">提示词组装（随任务快照冻结，版本 V1 / V2 / V3 递增）</div>
+        <div class="promptstrip">
+          <div class="pchip"><div class="ph">① 任务说明</div><div class="pd">操作类型（添加 / 替换）+ 目标位置与落点坐标</div></div>
+          <div class="pchip"><div class="ph">② 商品描述</div><div class="pd">参考商品图：品类、颜色、材质与造型特征</div></div>
+          <div class="pchip"><div class="ph">③ 空间描述</div><div class="pd">R0 分析 JSON：房间结构、光照方向、装修风格</div></div>
+          <div class="pchip"><div class="ph">④ 要求与约束</div><div class="pd">尺寸、风格统一、光影一致、透视自然</div></div>
+          <div class="pfinal"><span class="pf1">→ 最终提示词</span><span class="pf2">送入 R1 / R2 生图与修正</span></div>
+        </div>
+      </div>
+      <div class="down">▼</div>
+
+      <div class="layer l4">
+        <div class="ltag">AI 能力层 · 阿里云百炼</div>
+        <div class="stages">
+          <div class="stage">
+            <div class="sh"><span class="rn">R0</span><span class="st">需求解析</span></div>
+            <span class="mchip m-vis">qwen3-vl-plus</span>
+            <div class="sd">输入：基础图 + 要求<br>输出：<b>JSON</b>（空间理解 · 落点评估 · 尺寸比例）<br><b>不生图</b></div>
+          </div>
+          <div class="stage">
+            <div class="sh"><span class="rn">R1</span><span class="st">基础生成</span></div>
+            <span class="mchip m-img">qwen-image-3.0</span>
+            <div class="sd">输入：任务快照 + 分析 JSON + <b>商品参考图</b><br>输出：<b>图 1</b></div>
+          </div>
+          <div class="stage">
+            <div class="sh"><span class="rn">R2</span><span class="st">综合修正</span></div>
+            <span class="mchip m-img">qwen-image-3.0</span>
+            <div class="sd">输入：修正要求 + <b>图 1（主编辑）</b> + 基础图（锁背景）<br>输出：<b>图 2</b></div>
+          </div>
+          <div class="stage">
+            <div class="sh"><span class="rn">R3</span><span class="st">质量检查</span></div>
+            <span class="mchip m-vis">qwen3-vl-plus</span>
+            <div class="sd">输入：图 2 + 检查标准<br>输出：<b>评分</b>（PASS / WARN / 服务不可用）</div>
+          </div>
+        </div>
+        <div class="qcrow">
+          <div class="diamond"><div class="dbox"><div class="dtxt">R3<br>质量检查</div></div></div>
+          <div class="branches">
+            <div class="branch br-a"><span class="dot" style="background:#2f8560;"></span>PASS → 交付最终图（标注 QC PASS）</div>
+            <div class="branch br-b"><span class="dot" style="background:#e8a93c;"></span>服务不可用 → 交付图 2，标注 QC 待确认</div>
+            <div class="branch br-c"><span class="dot" style="background:#d84f4f;"></span>FAIL → 唯一一次纠错生图（图 3）→ 复检，仍失败则展示纠错图并标 QC WARN</div>
+          </div>
+          <div class="qcstd">
+            <h5>QC 检查项（R3 评分标准）</h5>
+            <ul>
+              <li>商品外观与参考图一致</li>
+              <li>光影方向与原空间匹配</li>
+              <li>比例、透视与落点合理</li>
+              <li>边缘融合自然，无拼贴感</li>
+            </ul>
+          </div>
+        </div>
+        <div class="failrow">
+          <div class="failcard">生成失败：失败卡显示错误信息，下方红色"重新生成"按钮</div>
+          <div class="errcard">常见错误类型：<br>· 网络中断（Failed to fetch）→ 重新生成或稍后再试<br>· 百炼 400 / 500（如账户欠费）→ 需运营检查百炼账户<br>· 轮询超时（150 次上限）→ 重新生成</div>
+          <div class="loopcard">↺ 用户手动重新生成 = <b>新任务沿用素材，从 R0 重来（非自动循环）</b></div>
+        </div>
+      </div>
+      <div class="down">▼</div>
+
+      <div class="layer l5">
+        <div class="ltag">数据与治理层</div>
+        <div class="nodes">
+          <div class="node"><div class="nid">D1</div><div class="ntitle">localStorage</div><div class="ndesc">历史对话 / 任务记录 / Prompt 模板；上限<b>约 12 段对话</b>，换设备或清缓存会丢失</div></div>
+          <div class="node"><div class="nid">D2</div><div class="ntitle">结果图</div><div class="ndesc"><b>云端图片 URL</b>，浏览器直接展示；下载文件名"栖境AI-效果图.png"</div></div>
+          <div class="node"><div class="nid">D3</div><div class="ntitle">排障与审计</div><div class="ndesc">每轮 <b>request_id</b>，管理员可逐轮定位耗时与产物</div></div>
+          <div class="node"><div class="nid">D4</div><div class="ntitle">后台管理</div><div class="ndesc">任务列表（<b>Success / Needs review / Failed</b>）+ <b>Round 0–3 轮次卡</b>（过程图、耗时）+ Prompt 模板在线编辑</div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sidebar">
+      <div class="sb-card">
+        <div class="sb-h"><span class="ic" style="background:#d84f4f;">!</span>关键源码事实</div>
+        <div class="fact"><span class="fn">1</span><span class="ft"><b>API Key 仅存服务端环境变量</b>，浏览器请求不带 Key</span></div>
+        <div class="fact"><span class="fn">2</span><span class="ft">R0 分析<b>只传基础图</b>，商品图参考发生在 R1/R2 与 QC</span></div>
+        <div class="fact"><span class="fn">3</span><span class="ft">重新生成 = 新建任务<b>从 R0 重来</b>，不是自动重试</span></div>
+        <div class="fact" style="margin-bottom:0;"><span class="fn">4</span><span class="ft">任务状态由浏览器 <b>localStorage</b> 保存，无服务端数据库</span></div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-h"><span class="ic" style="background:#8b6fc9;">◆</span>核心价值</div>
+        <div class="value">一张房间照片 + 一张商品图 + 一句话<br><span class="vh">→ 经视觉质检的融合效果图</span></div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-h"><span class="ic" style="background:#1f6b43;">№</span>关键指标（实测）</div>
+        <div class="metric"><span class="mv">41–45 秒</span><span class="mk">单轮生图实测耗时（不含排队）</span></div>
+        <div class="metric"><span class="mv">150 次</span><span class="mk">单轮轮询上限，超过按超时处理</span></div>
+        <div class="metric"><span class="mv">约 12 段</span><span class="mk">本地历史对话保存上限</span></div>
+        <div class="metric" style="margin-bottom:0;"><span class="mv">R0–R3</span><span class="mk">每任务记录四轮过程图、耗时与 request_id</span></div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-h"><span class="ic" style="background:#5a8fd6;">≡</span>图例</div>
+        <div class="lg-row"><span class="lg-sw"><span style="width:15px;height:15px;border:1.8px solid #6d4fb0;transform:rotate(45deg);border-radius:4px;display:inline-block;"></span></span>白色菱形 = 判断节点</div>
+        <div class="lg-row"><span class="lg-sw"><span style="width:18px;height:13px;border:1.6px solid #8a958e;border-radius:4px;display:inline-block;"></span></span>白色圆角矩形 = 操作节点</div>
+        <div class="lg-row"><span class="lg-sw"><span style="display:inline-flex;gap:2px;"><span style="width:7px;height:13px;background:#e27d9d;display:inline-block;"></span><span style="width:7px;height:13px;background:#3aa89b;display:inline-block;"></span><span style="width:7px;height:13px;background:#e8963c;display:inline-block;"></span><span style="width:7px;height:13px;background:#8b6fc9;display:inline-block;"></span><span style="width:7px;height:13px;background:#5a8fd6;display:inline-block;"></span></span></span>彩色描边大框 = 系统分层</div>
+        <div class="lg-row"><span class="lg-sw" style="font-weight:800;color:#222;">→</span>实线箭头 = 主数据流</div>
+        <div class="lg-row" style="margin-bottom:0;"><span class="lg-sw" style="font-weight:800;color:#cc5c5c;">⇢</span>红色虚线箭头 = 异常与重试</div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-h"><span class="ic" style="background:#2f8560;">i</span>使用提示（真实限制）</div>
+        <div class="fact"><span class="fn fg">1</span><span class="ft">关闭页面任务<b>不会续跑</b>，回来需手动"重新生成"</span></div>
+        <div class="fact"><span class="fn fg">2</span><span class="ft">同一对话<b>重传空间照片</b>会清空当前消息记录</span></div>
+        <div class="fact"><span class="fn fg">3</span><span class="ft">生成记录<b>仅保存在本机浏览器</b>，无云端账户</span></div>
+        <div class="fact" style="margin-bottom:0;"><span class="fn fg">4</span><span class="ft">移动端支持<b>待确认</b>，桌面 Chrome / Edge 体验最佳</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">依据 V2 版本真实功能整理 · 栖境 AI 家居空间预览</div>
+
+</div>
+</body>
+</html>
